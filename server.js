@@ -10,6 +10,7 @@ async function startServer() {
     console.log("Conected to the database !");
 
     const PORT = config.app.port;
+
     app.listen(PORT, () => {
       console.log(`Server is running on port ${PORT} .`);
     });
