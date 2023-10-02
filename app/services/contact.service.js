@@ -66,5 +66,19 @@ class ContactService {
     });
     return result;
   }
+
+  async deleteAll() {
+    const result = await this.Contact.deleteMany({});
+    return result.deletedCount;
+  }
+
+  async findAllFavorite() {
+    // const result = await this.Contact.find({});
+    // return result;
+    const cursor = await this.Contact.find({
+      favorite: true,
+    });
+    return await cursor.toArray();
+  }
 }
 module.exports = ContactService;
