@@ -57,12 +57,39 @@ exports.findOne = async (req, res, next) => {
   }
 };
 
-exports.update = (req, res) => {
-  res.json({ message: "Update  handler" });
+exports.update = async (req, res, next) => {
+  if (Object.keys(req.body).length === 0) {
+    return next(new ApiError(400, "data to update can not be empty"));
+  }
+  try {
+    const contactService = new ContactService(MongoDB.client);
+    const document = await contactService.update(req.params.id, req.body);
+    if (!document) {
+      return next(new ApiError(404, " Contact not found"));
+    }
+    return res.send({ message: "Contact was updated succesfylly" });
+  } catch (error) {
+    console.log(">>> err", error);
+    return next(
+      new ApiError(500, "An error occurred while creating the contact")
+    );
+  }
 };
 
-exports.delete = (req, res) => {
-  res.json({ message: "delete handler" });
+exports.delete = async (req, res, next) => {
+  try {
+    const contactService = new ContactService(MongoDB.client);
+    const document = await contactService.delete(req.params.id);
+    if (!document) {
+      return next(new ApiError(404, "Contact not found"));
+    }
+    return res.send({ message: "Contact was deleted successfully " });
+  } catch (error) {
+    console.log(">>> err", error);
+    return next(
+      new ApiError(500, "An error occurred while creating the contact")
+    );
+  }
 };
 
 exports.deleteAll = (req, res) => {
